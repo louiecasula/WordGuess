@@ -2,7 +2,9 @@ package com.github.zipcodewilmington;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Random;
@@ -16,16 +18,18 @@ import java.util.Random;
 public class Hangman {
     public static void main(String [] args) {
         Scanner scanner = new Scanner(System.in);
-        String currentWord = generateWord();
+        ArrayList<String> wordList = importWords();
+        String currentWord = generateWord(wordList);
 
         int length = currentWord.length();
         int guessesLeft = length;
         String[] wordArr = currentWord.split("");
         String[] guesses = new String[length];
+//        ArrayList<String> guesses = new ArrayList<>();
         String[] display = occupyDisplay(length);
         System.out.println("Let's Play Wordguess version 1.0");
         while (guessesLeft > 0) {
-//            if
+            // Include a boolean that determines if whole word has been guessed.
             System.out.println("Current Guesses: ");
             if (guessesLeft == length) {
                 iterate(display);
@@ -33,8 +37,10 @@ public class Hangman {
             else { iterate(displayStatus(guesses, wordArr, display)); }
             System.out.printf("You have %d tries left.\n", guessesLeft);
             while (true) {
+                // Combine 37 & 38 into a method
                 System.out.println("Enter a single letter: ");
                 String guess = scanner.nextLine();
+                // Combine 39 - 46 into a method
                 if (guess.length() != 1) {
                     System.out.println("Guess must be just one letter!");
                 } else if (wasAlreadyGuessed(guesses, guess)) {
@@ -83,25 +89,26 @@ public class Hangman {
         return false;
     }
 
-    public static String generateWord() {
-        // Consider changing to ArrayList<String> so you can remove words easily
-        // This would allow for no repeating words if playing multiple games consecutively
-        String[] wordList = new String[50];
+    public static String generateWord(ArrayList<String> wordList) {
         Random random = new Random();
-        try {
-            Scanner fileIn = new Scanner(new File("/Users/louie/projects/WordGuess/src/main/java/com/github/zipcodewilmington/WordBank.txt"));
+        return wordList.get(random.nextInt(wordList.size()));
+    }
 
-            int i = 0;
-            while (fileIn.hasNext())
-            {
-                String lineIn = fileIn.nextLine();
-                wordList[i] = lineIn;
-                i++;
-            }
+    public static ArrayList<String> importWords() {
+        ArrayList<String> wordList = new ArrayList<>();
+
+        Scanner fileIn;
+        try {
+            fileIn = new Scanner(new File("/Users/louie/projects/WordGuess/src/main/java/com/github/zipcodewilmington/WordBank.txt"));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        catch (IOException e) {
-            return "File not found.";
+
+        while (fileIn.hasNext())
+        {
+            String lineIn = fileIn.nextLine();
+            wordList.add(lineIn);
         }
-        return wordList[random.nextInt(50)];
+        return wordList;
     }
 }
