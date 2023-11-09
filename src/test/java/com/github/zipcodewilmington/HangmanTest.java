@@ -3,7 +3,6 @@ package com.github.zipcodewilmington;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 /**
@@ -15,22 +14,22 @@ public class HangmanTest {
     @Test
     public void testGenerateWord() {
         // Given
-        ArrayList<String> wordList = Hangman.importWords();
+        ArrayList<String> wordList = Hangman.getWordList();
         boolean expected = true;
 
         // When
-        String word = Hangman.generateWord(wordList);
+        String word = Hangman.setCurrentWord(wordList);
         System.out.println(word);
 
         // Then
-        boolean actual = wordList.contains(Hangman.generateWord(wordList));
+        boolean actual = wordList.contains(Hangman.setCurrentWord(wordList));
         Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void testOccupyDisplay() {
         // Given
-        ArrayList<String> wordList = Hangman.importWords();
+        ArrayList<String> wordList = Hangman.getWordList();
         boolean expected = true;
 
         // When
@@ -38,7 +37,7 @@ public class HangmanTest {
 //        System.out.println(word);
 
         // Then
-        boolean actual = wordList.contains(Hangman.generateWord(wordList));
+        boolean actual = wordList.contains(Hangman.setCurrentWord(wordList));
         Assert.assertEquals(expected, actual);
     }
 }
