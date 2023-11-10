@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author xt0fer
@@ -14,30 +15,32 @@ public class HangmanTest {
     @Test
     public void testGenerateWord() {
         // Given
-        ArrayList<String> wordList = Hangman.getWordList();
+        ArrayList<String> wordList = Hangman.importWords();
         boolean expected = true;
 
         // When
-        String word = Hangman.setCurrentWord(wordList);
+        String word = Hangman.generateWord(wordList);
         System.out.println(word);
 
         // Then
-        boolean actual = wordList.contains(Hangman.setCurrentWord(wordList));
+        boolean actual = wordList.contains(Hangman.generateWord(wordList));
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void testOccupyDisplay() {
+    public void testDisplayStatus() {
         // Given
-        ArrayList<String> wordList = Hangman.getWordList();
-        boolean expected = true;
+        String currentWord = "banana";
+        ArrayList<String> wordArr = new ArrayList<>(Arrays.asList(currentWord.split("")));
+        ArrayList<String> guesses = new ArrayList<>();
+        guesses.add("a");
+        ArrayList<String> expected = new ArrayList<>(Arrays.asList("_", "a", "_", "a", "_", "a"));
 
         // When
-//        String word = Hangman.occupyDisplay();
-//        System.out.println(word);
+        ArrayList<String> display = Hangman.displayStatus(guesses, wordArr);
+        System.out.println(display);
 
         // Then
-        boolean actual = wordList.contains(Hangman.setCurrentWord(wordList));
-        Assert.assertEquals(expected, actual);
+        Assert.assertEquals(expected, display);
     }
 }
